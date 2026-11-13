@@ -5,7 +5,8 @@ import logging
 
 
 def startTraining(stub):
-    trainingAnswer = stub.startTraining("bde")
+    request = serverservices_pb2.TrainingRequest(request="please")
+    trainingAnswer = stub.startTraining(request)
     print ("Here's the training answer : ", trainingAnswer)
 
 
