@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+service TrainingService {
+
+    rpc startTraining (TrainingRequest) returns (TrainingAnswer) {}
+}
+
+message TrainingRequest {
+    string request = 1;
+}
+
+message TrainingAnswer{
+    string request = 1;
+}

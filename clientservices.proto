@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+service RegisterService {
+
+    rpc register (RegisterRequest) returns (RegisterAnswer) {}
+}
+
+message RegisterRequest {
+    string id = 1;
+}
+
+message RegisterAnswer {
+    bool answer = 1;
+    string message = 1;
+}
