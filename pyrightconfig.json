@@ -1,0 +1,4 @@
+{
+  "extraPaths": ["phase1", "phase2"],
+  "exclude": ["**/__pycache__"]
+}

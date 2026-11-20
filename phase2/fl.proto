@@ -1,0 +1,92 @@
+// Step 1 - The gRPC contract of the Minimal Federated Learning Framework.
+//
+// It describes WHAT can be sent (messages) and WHICH remote calls exist
+// (service). From this file, grpc_tools generates the Python code:
+//     python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. fl.proto
+
+syntax = "proto3";
+
+package fl;
+
+// ---------------------------------------------------------------- 1.1 enum
+// Same states as JobStatus in phase1/models.py
+enum JobStatus {
+  CREATED = 0;
+  RUNNING = 1;
+  COMPLETED = 2;
+  FAILED = 3;
+}
+
+// ------------------------------------------- 1.2 data messages (from Phase 1)
+// Same fields as the dataclasses in phase1/models.py
+message TrainingConfig {
+  int32 num_rounds = 1;
+}
+
+message TrainingTask {
+  string job_id = 1;
+  int32 round_number = 2;
+  double global_weight = 3;
+}
+
+// Only the result travels over the network, never the data.
+message TrainingResult {
+  string participant_id = 1;
+  string job_id = 2;
+  int32 round_number = 3;
+  double weight = 4;
+  int32 num_samples = 5;
+}
+
+// ------------------------------------------ 1.3 request / reply messages
+message RegisterRequest {
+  string name = 1;               // NOTE: no data field - the data stays local
+}
+message RegisterReply {
+  string participant_id = 1;
+}
+
+message CreateJobRequest {
+  TrainingConfig config = 1;
+}
+message CreateJobReply {
+  string job_id = 1;
+}
+
+message JobRequest {
+  string job_id = 1;
+}
+
+message TaskRequest {
+  string participant_id = 1;
+}
+message TaskReply {
+  bool has_task = 1;             // false = nothing to do right now, ask again later
+  TrainingTask task = 2;
+}
+
+message SubmitReply {
+  bool accepted = 1;
+  string message = 2;
+}
+
+message StatusReply {
+  string job_id = 1;
+  JobStatus status = 2;
+  int32 num_rounds = 3;
+  int32 current_round = 4;
+  repeated string participant_ids = 5;
+  map<string, double> local_results = 6;   // participant_id -> weight
+  double global_weight = 7;
+}
+
+// ------------------------------------------------------- 1.4 the service
+// Phase 1 method                 ->  gRPC operation
+service Coordinator {
+  rpc RegisterParticipant (RegisterRequest) returns (RegisterReply);  // register_participant()
+  rpc CreateJob           (CreateJobRequest) returns (CreateJobReply); // create_job()
+  rpc StartTraining       (JobRequest)      returns (StatusReply);     // start_job()
+  rpc GetTrainingTask     (TaskRequest)     returns (TaskReply);       // _distribute_task()
+  rpc SubmitTrainingResult(TrainingResult)  returns (SubmitReply);     // participant.train() result
+  rpc GetTrainingStatus   (JobRequest)      returns (StatusReply);     // get_status()
+}
