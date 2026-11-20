@@ -1,1 +1,8 @@
+__pycache__/
+*.pyc
+.venv/
+
+# local only, not pushed
+docs/
+phase1/diagrams/
 ﻿__pycache__
