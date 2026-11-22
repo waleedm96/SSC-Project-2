@@ -6,10 +6,11 @@ service RegisterService {
 }
 
 message RegisterRequest {
-    string id = 1;
+    string clientId = 1;
+    string name = 2;
 }
 
 message RegisterAnswer {
     bool answer = 1;
-    string message = 1;
+    string message = 2;
 }

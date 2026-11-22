@@ -1,13 +1,7 @@
-import serverservices_pb2_grpc
-import serverservices_pb2
+import generatedFiles.client.protos.clientservices_pb2
+import generatedFiles.client.protos.clientservices_pb2_grpc
 import grpc
 import logging
-
-
-def startTraining(stub):
-    request = serverservices_pb2.TrainingRequest(request="please")
-    trainingAnswer = stub.startTraining(request)
-    print ("Here's the training answer : ", trainingAnswer)
 
 
 def run():

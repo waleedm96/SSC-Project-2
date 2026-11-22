@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-import serverservices_pb2 as serverservices__pb2
+from protos import serverservices_pb2 as protos_dot_serverservices__pb2
 
 GRPC_GENERATED_VERSION = '1.85.1'
 GRPC_VERSION = grpc.__version__
@@ -18,14 +18,14 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + ' but the generated code in serverservices_pb2_grpc.py depends on'
+        + ' but the generated code in protos/serverservices_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
     )
 
 
-class TrainingServiceStub:
+class RegisterServiceStub:
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -34,43 +34,43 @@ class TrainingServiceStub:
         Args:
             channel: A grpc.Channel.
         """
-        self.startTraining = channel.unary_unary(
-                '/TrainingService/startTraining',
-                request_serializer=serverservices__pb2.TrainingRequest.SerializeToString,
-                response_deserializer=serverservices__pb2.TrainingAnswer.FromString,
+        self.register = channel.unary_unary(
+                '/RegisterService/register',
+                request_serializer=protos_dot_serverservices__pb2.RegisterRequest.SerializeToString,
+                response_deserializer=protos_dot_serverservices__pb2.RegisterAnswer.FromString,
                 _registered_method=True)
 
 
-class TrainingServiceServicer:
+class RegisterServiceServicer:
     """Missing associated documentation comment in .proto file."""
 
-    def startTraining(self, request, context):
+    def register(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
 
-def add_TrainingServiceServicer_to_server(servicer, server):
+def add_RegisterServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'startTraining': grpc.unary_unary_rpc_method_handler(
-                    servicer.startTraining,
-                    request_deserializer=serverservices__pb2.TrainingRequest.FromString,
-                    response_serializer=serverservices__pb2.TrainingAnswer.SerializeToString,
+            'register': grpc.unary_unary_rpc_method_handler(
+                    servicer.register,
+                    request_deserializer=protos_dot_serverservices__pb2.RegisterRequest.FromString,
+                    response_serializer=protos_dot_serverservices__pb2.RegisterAnswer.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'TrainingService', rpc_method_handlers)
+            'RegisterService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('TrainingService', rpc_method_handlers)
+    server.add_registered_method_handlers('RegisterService', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class TrainingService:
+class RegisterService:
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def startTraining(request,
+    def register(request,
             target,
             options=(),
             channel_credentials=None,
@@ -83,9 +83,9 @@ class TrainingService:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/TrainingService/startTraining',
-            serverservices__pb2.TrainingRequest.SerializeToString,
-            serverservices__pb2.TrainingAnswer.FromString,
+            '/RegisterService/register',
+            protos_dot_serverservices__pb2.RegisterRequest.SerializeToString,
+            protos_dot_serverservices__pb2.RegisterAnswer.FromString,
             options,
             channel_credentials,
             insecure,
