@@ -1,9 +1,3 @@
-// gRPC contract of the Minimal Federated Learning Framework (Phase 2).
-// One file shared by all components:
-//   - Coordinator Service (Python)  -> gRPC server
-//   - Management Client   (Python)  -> gRPC client
-//   - Participant Service (Java)    -> gRPC client
-
 syntax = "proto3";
 
 package sscfederated;
@@ -11,8 +5,6 @@ package sscfederated;
 option java_package = "com.ssc.federated";
 option java_multiple_files = true;
 
-
-// ======================================================== service
 
 service CoordinatorService {
 
@@ -28,11 +20,8 @@ service CoordinatorService {
   rpc GetTrainingStatus   (TrainingStatusRequest)      returns (TrainingJob);
 }
 
-
-// ======================================================== data (same as Phase 1 models.py)
-
 enum JobStatus {
-  JOB_STATUS_UNSPECIFIED = 0;   // proto3 rule: the first value must be 0
+  JOB_STATUS_UNSPECIFIED = 0; 
   CREATED   = 1;
   RUNNING   = 2;
   COMPLETED = 3;
@@ -74,12 +63,9 @@ message ParticipantInfo {
   string name           = 2;
 }
 
-
-// ======================================================== requests and replies
-
 // RegisterParticipant
 message RegisterParticipantRequest {
-  string name = 1;              // only the name: the local data never leaves the participant
+  string name = 1;         
 }
 message RegisterParticipantReply {
   string participant_id = 1;
@@ -90,7 +76,7 @@ message TrainingTaskRequest {
   string participant_id = 1;
 }
 message TrainingTaskReply {
-  bool         has_task = 1;    // false = nothing to do yet, ask again later
+  bool         has_task = 1;   
   TrainingTask task     = 2;
 }
 
