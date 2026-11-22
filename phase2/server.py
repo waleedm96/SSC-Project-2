@@ -1,5 +1,5 @@
-import serverservices_pb2_grpc
-import serverservices_pb2
+import generatedFiles.server.protos.serverservices_pb2
+import generatedFiles.server.protos.serverservices_pb2_grpc
 import grpc
 from concurrent import futures
 
@@ -10,6 +10,11 @@ class ServerServicer(serverservices_pb2_grpc.TrainingService):
         print(request)
         return serverservices_pb2.TrainingAnswer(request="aa") 
         #return reply
+
+def startTraining(stub):
+    request = serverservices_pb2.TrainingRequest(request="please")
+    trainingAnswer = stub.startTraining(request)
+    print ("Here's the training answer : ", trainingAnswer)
 
 def serve():
     print("Server started listening on http://localhost:50051")
