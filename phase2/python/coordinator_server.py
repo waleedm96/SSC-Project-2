@@ -1,10 +1,4 @@
-"""Coordinator Service (Python) - the gRPC server of the federated learning framework.
-
-It keeps the participants and jobs, hands out training tasks, receives the
-local results and aggregates them. It never sees the participants' data.
-
-Run:  python coordinator_server.py
-"""
+"""Coordinator Service (Python) - the gRPC server of the federated learning framework."""
 
 import threading
 import time
@@ -32,7 +26,6 @@ class Aggregator:
 
 
 class CoordinatorServicer(pb_grpc.CoordinatorServiceServicer):
-    """Implements the 7 RPCs defined in federated_learning.proto."""
 
     def __init__(self):
         self._lock = threading.Lock()                 # one request at a time may change the data
@@ -41,7 +34,7 @@ class CoordinatorServicer(pb_grpc.CoordinatorServiceServicer):
         self._round_results: dict[str, dict] = {}     # "job-1" -> {"p1": TrainingResult, ...} for the current round
         self._aggregator = Aggregator()
 
-    # ------------------------------------------------------------ used by participants
+  #participants funcations 
 
     def RegisterParticipant(self, request, context):
         name = request.name.strip()
@@ -72,7 +65,6 @@ class CoordinatorServicer(pb_grpc.CoordinatorServiceServicer):
                         f"to {participant_id} (global weight = {job.global_weight})")
                     return pb.TrainingTaskReply(has_task=True, task=task)
 
-        # nothing to do yet: the participant will ask again later (polling)
         return pb.TrainingTaskReply(has_task=False)
 
     def SubmitTrainingResult(self, request, context):
@@ -102,7 +94,7 @@ class CoordinatorServicer(pb_grpc.CoordinatorServiceServicer):
 
         return pb.SubmitResultReply(accepted=True, message="Result accepted")
 
-    # ------------------------------------------------------------ used by the management client
+#client part
 
     def ListParticipants(self, request, context):
         with self._lock:
@@ -155,7 +147,6 @@ class CoordinatorServicer(pb_grpc.CoordinatorServiceServicer):
             reply.CopyFrom(job)          # send a copy, so the job can keep changing safely
         return reply
 
-    # ------------------------------------------------------------ helpers
 
     def _get_job(self, job_id, context) -> pb.TrainingJob:
         if job_id not in self._jobs:
@@ -163,7 +154,6 @@ class CoordinatorServicer(pb_grpc.CoordinatorServiceServicer):
         return self._jobs[job_id]
 
     def _finish_round(self, job: pb.TrainingJob) -> None:
-        """Called when all participants have sent their result for the current round."""
         results = list(self._round_results[job.job_id].values())
         job.global_weight = self._aggregator.aggregate(results)
 
