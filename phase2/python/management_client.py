@@ -25,6 +25,15 @@ class CoordinatorClient:
         reply = self._stub.ListParticipants(request, timeout=TIMEOUT_SECONDS)
         return list(reply.participants)
 
+    def create_job(self, num_rounds: int, initial_weight: float) -> str:
+        config = pb.TrainingConfig(
+            num_rounds=num_rounds,
+            initial_weight=initial_weight,
+        )
+        request = pb.CreateJobRequest(config=config)
+        reply = self._stub.CreateJob(request, timeout=TIMEOUT_SECONDS)
+        return reply.job_id
+
 
 def handle_rpc_error(err: grpc.RpcError) -> None:
     print(f"[gRPC Error] {err.code().name}: {err.details()}")
@@ -51,8 +60,17 @@ def main() -> None:
                         print(f"\nRegistered participants ({len(participants)}):")
                         for p in participants:
                             print(f"  - {p.participant_id}: {p.name}")
+                elif choice == "2":
+                    try:
+                        num_rounds = int(input("Number of rounds (default 1): ").strip() or "1")
+                        initial_weight = float(input("Initial global weight (default 0.0): ").strip() or "0.0")
+                    except ValueError:
+                        print("Not a number. Enter intergers or floats only.")
+                        continue
+                    job_id = client.create_job(num_rounds, initial_weight)
+                    print(f"Created job: {job_id}")
                 elif choice == "0":
-                    print("Bye!")
+                    print("Bye bye!")
                     break
                 else:
                     print("Invalid option. Try another bro.")
