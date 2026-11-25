@@ -38,11 +38,33 @@ class CoordinatorClient:
         request = pb.StartTrainingRequest(job_id=job_id)
         reply = self._stub.StartTraining(request, timeout=TIMEOUT_SECONDS)
         return reply.started, reply.message
+    def get_training_status(self, job_id: str) -> pb.TrainingJob:
+        request = pb.TrainingStatusRequest(job_id=job_id)
+        return self._stub.GetTrainingStatus(request, timeout=TIMEOUT_SECONDS)
 
 
 def handle_rpc_error(err: grpc.RpcError) -> None:
     print(f"[gRPC Error] {err.code().name}: {err.details()}")
 
+def print_job(job: pb.TrainingJob) -> None:
+    status_name = pb.JobStatus.Name(job.status)
+    print(f"\n--- Job {job.job_id} ---")
+    print(f"  Status        : {status_name}")
+    print(f"  Round         : {job.current_round} / {job.config.num_rounds}")
+    print(f"  Initial weight: {job.config.initial_weight}")
+    print(f"  Global weight : {job.global_weight}")
+    print(f"  Participants  : {', '.join(job.participant_ids)}")
+
+    if not job.results:
+        print("  Results       : (none yet)")
+    else:
+        print("  Results:")
+        print(f"    {'Round':<7} {'Participant':<13} {'Local Weight':<14} {'Samples':<8}")
+        for r in job.results:
+            print(
+                f"    {r.round:<7} {r.participant_id:<13} "
+                f"{r.local_weight:<14.4f} {r.num_samples:<8}"
+            )
 
 def main() -> None:
     address = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_ADDRESS
@@ -52,6 +74,7 @@ def main() -> None:
     try:
         while True:
             print("\n=== Federated Learning Management CLI ===")
+            print("4. Check training job status")
             print("3. Start a training job")
             print("2. Create a new training job")
             print("1. List registered participants")
@@ -83,6 +106,13 @@ def main() -> None:
                         continue
                     started, message = client.start_training(job_id)
                     print(f"StartTraining -> started={started}, message='{message}'")
+                elif choice == "4":
+                    job_id = input("Job ID to check (e.g. job-1): ").strip()
+                    if not job_id:
+                        print("Job ID cannot be empty.")
+                        continue
+                    job = client.get_training_status(job_id)
+                    print_job(job)
                 elif choice == "0":
                     print("Bye bye!")
                     break
