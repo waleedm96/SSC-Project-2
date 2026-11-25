@@ -66,18 +66,25 @@ def print_job(job: pb.TrainingJob) -> None:
                 f"{r.local_weight:<14.4f} {r.num_samples:<8}"
             )
 
+def prompt_job_id(last_job_id: str | None) -> str:
+    hint = f" (Enter for {last_job_id})" if last_job_id else ""
+    value = input(f"Job ID{hint}: ").strip()
+    return value or (last_job_id or "")
+
+
 def main() -> None:
     address = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_ADDRESS
     client = CoordinatorClient(address)
+    last_job_id: str | None = None
     print(f"Connected to Coordinator at {address}")
 
     try:
         while True:
             print("\n=== Federated Learning Management CLI ===")
-            print("4. Check training job status")
-            print("3. Start a training job")
-            print("2. Create a new training job")
             print("1. List registered participants")
+            print("2. Create a training job")
+            print("3. Start a training job")
+            print("4. Check job status & results")
             print("0. Exit")
             choice = input("Select an option: ").strip()
 
@@ -85,41 +92,50 @@ def main() -> None:
                 if choice == "1":
                     participants = client.list_participants()
                     if not participants:
-                        print("No participants here :>")
+                        print("No participants registered yet.")
                     else:
                         print(f"\nRegistered participants ({len(participants)}):")
                         for p in participants:
                             print(f"  - {p.participant_id}: {p.name}")
+
                 elif choice == "2":
                     try:
                         num_rounds = int(input("Number of rounds (default 1): ").strip() or "1")
                         initial_weight = float(input("Initial global weight (default 0.0): ").strip() or "0.0")
                     except ValueError:
-                        print("Not a number. Enter intergers or floats only.")
+                        print("Invalid number format. Please enter integers/floats.")
                         continue
-                    job_id = client.create_job(num_rounds, initial_weight)
-                    print(f"Created job: {job_id}")
+                    last_job_id = client.create_job(num_rounds, initial_weight)
+                    print(f"Created job: {last_job_id}")
+
                 elif choice == "3":
-                    job_id = input("Job ID to start (e.g. job-1): ").strip()
+                    job_id = prompt_job_id(last_job_id)
                     if not job_id:
                         print("Job ID cannot be empty.")
                         continue
                     started, message = client.start_training(job_id)
                     print(f"StartTraining -> started={started}, message='{message}'")
+                    last_job_id = job_id
+
                 elif choice == "4":
-                    job_id = input("Job ID to check (e.g. job-1): ").strip()
+                    job_id = prompt_job_id(last_job_id)
                     if not job_id:
                         print("Job ID cannot be empty.")
                         continue
                     job = client.get_training_status(job_id)
                     print_job(job)
+                    last_job_id = job_id
+
                 elif choice == "0":
-                    print("Bye bye!")
+                    print("Bye!")
                     break
                 else:
-                    print("Invalid option. Try another bro.")
+                    print("Invalid choice. Please try again.")
+
             except grpc.RpcError as err:
                 handle_rpc_error(err)
+    except KeyboardInterrupt:
+        print("\nInterrupted. Closing client...")
     finally:
         client.close()
 
