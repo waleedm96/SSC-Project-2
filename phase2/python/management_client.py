@@ -34,6 +34,11 @@ class CoordinatorClient:
         reply = self._stub.CreateJob(request, timeout=TIMEOUT_SECONDS)
         return reply.job_id
 
+    def start_training(self, job_id: str) -> tuple[bool, str]:
+        request = pb.StartTrainingRequest(job_id=job_id)
+        reply = self._stub.StartTraining(request, timeout=TIMEOUT_SECONDS)
+        return reply.started, reply.message
+
 
 def handle_rpc_error(err: grpc.RpcError) -> None:
     print(f"[gRPC Error] {err.code().name}: {err.details()}")
@@ -47,6 +52,8 @@ def main() -> None:
     try:
         while True:
             print("\n=== Federated Learning Management CLI ===")
+            print("3. Start a training job")
+            print("2. Create a new training job")
             print("1. List registered participants")
             print("0. Exit")
             choice = input("Select an option: ").strip()
@@ -69,6 +76,13 @@ def main() -> None:
                         continue
                     job_id = client.create_job(num_rounds, initial_weight)
                     print(f"Created job: {job_id}")
+                elif choice == "3":
+                    job_id = input("Job ID to start (e.g. job-1): ").strip()
+                    if not job_id:
+                        print("Job ID cannot be empty.")
+                        continue
+                    started, message = client.start_training(job_id)
+                    print(f"StartTraining -> started={started}, message='{message}'")
                 elif choice == "0":
                     print("Bye bye!")
                     break
