@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18\x66\x65\x64\x65rated_learning.proto\x12\x0csscfederated\"<\n\x0eTrainingConfig\x12\x12\n\nnum_rounds\x18\x01 \x01(\x05\x12\x16\n\x0einitial_weight\x18\x02 \x01(\x01\"r\n\x0cTrainingTask\x12\x0e\n\x06job_id\x18\x01 \x01(\t\x12\r\n\x05round\x18\x02 \x01(\x05\x12\x15\n\rglobal_weight\x18\x03 \x01(\x01\x12,\n\x06\x63onfig\x18\x04 \x01(\x0b\x32\x1c.sscfederated.TrainingConfig\"r\n\x0eTrainingResult\x12\x0e\n\x06job_id\x18\x01 \x01(\t\x12\x16\n\x0eparticipant_id\x18\x02 \x01(\t\x12\r\n\x05round\x18\x03 \x01(\x05\x12\x14\n\x0clocal_weight\x18\x04 \x01(\x01\x12\x13\n\x0bnum_samples\x18\x05 \x01(\x05\"\xea\x01\n\x0bTrainingJob\x12\x0e\n\x06job_id\x18\x01 \x01(\t\x12,\n\x06\x63onfig\x18\x02 \x01(\x0b\x32\x1c.sscfederated.TrainingConfig\x12\x17\n\x0fparticipant_ids\x18\x03 \x03(\t\x12\'\n\x06status\x18\x04 \x01(\x0e\x32\x17.sscfederated.JobStatus\x12\x15\n\rcurrent_round\x18\x05 \x01(\x05\x12\x15\n\rglobal_weight\x18\x06 \x01(\x01\x12-\n\x07results\x18\x07 \x03(\x0b\x32\x1c.sscfederated.TrainingResult\"7\n\x0fParticipantInfo\x12\x16\n\x0eparticipant_id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\"*\n\x1aRegisterParticipantRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"2\n\x18RegisterParticipantReply\x12\x16\n\x0eparticipant_id\x18\x01 \x01(\t\"-\n\x13TrainingTaskRequest\x12\x16\n\x0eparticipant_id\x18\x01 \x01(\t\"O\n\x11TrainingTaskReply\x12\x10\n\x08has_task\x18\x01 \x01(\x08\x12(\n\x04task\x18\x02 \x01(\x0b\x32\x1a.sscfederated.TrainingTask\"6\n\x11SubmitResultReply\x12\x10\n\x08\x61\x63\x63\x65pted\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"\x19\n\x17ListParticipantsRequest\"L\n\x15ListParticipantsReply\x12\x33\n\x0cparticipants\x18\x01 \x03(\x0b\x32\x1d.sscfederated.ParticipantInfo\"@\n\x10\x43reateJobRequest\x12,\n\x06\x63onfig\x18\x01 \x01(\x0b\x32\x1c.sscfederated.TrainingConfig\" \n\x0e\x43reateJobReply\x12\x0e\n\x06job_id\x18\x01 \x01(\t\"&\n\x14StartTrainingRequest\x12\x0e\n\x06job_id\x18\x01 \x01(\t\"6\n\x12StartTrainingReply\x12\x0f\n\x07started\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"\'\n\x15TrainingStatusRequest\x12\x0e\n\x06job_id\x18\x01 \x01(\t*\\\n\tJobStatus\x12\x1a\n\x16JOB_STATUS_UNSPECIFIED\x10\x00\x12\x0b\n\x07\x43REATED\x10\x01\x12\x0b\n\x07RUNNING\x10\x02\x12\r\n\tCOMPLETED\x10\x03\x12\n\n\x06\x46\x41ILED\x10\x04\x32\x82\x05\n\x12\x43oordinatorService\x12g\n\x13RegisterParticipant\x12(.sscfederated.RegisterParticipantRequest\x1a&.sscfederated.RegisterParticipantReply\x12U\n\x0fGetTrainingTask\x12!.sscfederated.TrainingTaskRequest\x1a\x1f.sscfederated.TrainingTaskReply\x12U\n\x14SubmitTrainingResult\x12\x1c.sscfederated.TrainingResult\x1a\x1f.sscfederated.SubmitResultReply\x12^\n\x10ListParticipants\x12%.sscfederated.ListParticipantsRequest\x1a#.sscfederated.ListParticipantsReply\x12I\n\tCreateJob\x12\x1e.sscfederated.CreateJobRequest\x1a\x1c.sscfederated.CreateJobReply\x12U\n\rStartTraining\x12\".sscfederated.StartTrainingRequest\x1a .sscfederated.StartTrainingReply\x12S\n\x11GetTrainingStatus\x12#.sscfederated.TrainingStatusRequest\x1a\x19.sscfederated.TrainingJobB\x15\n\x11\x63om.ssc.federatedP\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18\x66\x65\x64\x65rated_learning.proto\x12\x0csscfederated\"<\n\x0eTrainingConfig\x12\x12\n\nnum_rounds\x18\x01 \x01(\x05\x12\x16\n\x0einitial_weight\x18\x02 \x01(\x01\"r\n\x0cTrainingTask\x12\x0e\n\x06job_id\x18\x01 \x01(\t\x12\r\n\x05round\x18\x02 \x01(\x05\x12\x15\n\rglobal_weight\x18\x03 \x01(\x01\x12,\n\x06\x63onfig\x18\x04 \x01(\x0b\x32\x1c.sscfederated.TrainingConfig\"r\n\x0eTrainingResult\x12\x0e\n\x06job_id\x18\x01 \x01(\t\x12\x16\n\x0eparticipant_id\x18\x02 \x01(\t\x12\r\n\x05round\x18\x03 \x01(\x05\x12\x14\n\x0clocal_weight\x18\x04 \x01(\x01\x12\x13\n\x0bnum_samples\x18\x05 \x01(\x05\"\xea\x01\n\x0bTrainingJob\x12\x0e\n\x06job_id\x18\x01 \x01(\t\x12,\n\x06\x63onfig\x18\x02 \x01(\x0b\x32\x1c.sscfederated.TrainingConfig\x12\x17\n\x0fparticipant_ids\x18\x03 \x03(\t\x12\'\n\x06status\x18\x04 \x01(\x0e\x32\x17.sscfederated.JobStatus\x12\x15\n\rcurrent_round\x18\x05 \x01(\x05\x12\x15\n\rglobal_weight\x18\x06 \x01(\x01\x12-\n\x07results\x18\x07 \x03(\x0b\x32\x1c.sscfederated.TrainingResult\";\n\x0fParticipantInfo\x12\x1a\n\x12participant_ip_adr\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\"F\n\x1aRegisterParticipantRequest\x12\x1a\n\x12participant_ip_idr\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\"6\n\x18RegisterParticipantReply\x12\x1a\n\x12participant_ip_idr\x18\x01 \x01(\t\"?\n\x13TrainingTaskRequest\x12(\n\x04task\x18\x01 \x01(\x0b\x32\x1a.sscfederated.TrainingTask\"6\n\x11SubmitResultReply\x12\x10\n\x08\x61\x63\x63\x65pted\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"\x19\n\x17ListParticipantsRequest\"L\n\x15ListParticipantsReply\x12\x33\n\x0cparticipants\x18\x01 \x03(\x0b\x32\x1d.sscfederated.ParticipantInfo\"@\n\x10\x43reateJobRequest\x12,\n\x06\x63onfig\x18\x01 \x01(\x0b\x32\x1c.sscfederated.TrainingConfig\" \n\x0e\x43reateJobReply\x12\x0e\n\x06job_id\x18\x01 \x01(\t\"&\n\x14StartTrainingRequest\x12\x0e\n\x06job_id\x18\x01 \x01(\t\"6\n\x12StartTrainingReply\x12\x0f\n\x07started\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"\'\n\x15TrainingStatusRequest\x12\x0e\n\x06job_id\x18\x01 \x01(\t*\\\n\tJobStatus\x12\x1a\n\x16JOB_STATUS_UNSPECIFIED\x10\x00\x12\x0b\n\x07\x43REATED\x10\x01\x12\x0b\n\x07RUNNING\x10\x02\x12\r\n\tCOMPLETED\x10\x03\x12\n\n\x06\x46\x41ILED\x10\x04\x32\xd4\x03\n\x12\x43oordinatorService\x12g\n\x13RegisterParticipant\x12(.sscfederated.RegisterParticipantRequest\x1a&.sscfederated.RegisterParticipantReply\x12^\n\x10ListParticipants\x12%.sscfederated.ListParticipantsRequest\x1a#.sscfederated.ListParticipantsReply\x12I\n\tCreateJob\x12\x1e.sscfederated.CreateJobRequest\x1a\x1c.sscfederated.CreateJobReply\x12U\n\rStartTraining\x12\".sscfederated.StartTrainingRequest\x1a .sscfederated.StartTrainingReply\x12S\n\x11GetTrainingStatus\x12#.sscfederated.TrainingStatusRequest\x1a\x19.sscfederated.TrainingJob2i\n\x12ParticipantService\x12S\n\x10SendTrainingTask\x12!.sscfederated.TrainingTaskRequest\x1a\x1c.sscfederated.TrainingResultB\x15\n\x11\x63om.ssc.federatedP\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -32,8 +32,8 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'federated_learning_pb2', _g
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'\n\021com.ssc.federatedP\001'
-  _globals['_JOBSTATUS']._serialized_start=1252
-  _globals['_JOBSTATUS']._serialized_end=1344
+  _globals['_JOBSTATUS']._serialized_start=1225
+  _globals['_JOBSTATUS']._serialized_end=1317
   _globals['_TRAININGCONFIG']._serialized_start=42
   _globals['_TRAININGCONFIG']._serialized_end=102
   _globals['_TRAININGTASK']._serialized_start=104
@@ -43,31 +43,31 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_TRAININGJOB']._serialized_start=337
   _globals['_TRAININGJOB']._serialized_end=571
   _globals['_PARTICIPANTINFO']._serialized_start=573
-  _globals['_PARTICIPANTINFO']._serialized_end=628
-  _globals['_REGISTERPARTICIPANTREQUEST']._serialized_start=630
-  _globals['_REGISTERPARTICIPANTREQUEST']._serialized_end=672
-  _globals['_REGISTERPARTICIPANTREPLY']._serialized_start=674
-  _globals['_REGISTERPARTICIPANTREPLY']._serialized_end=724
-  _globals['_TRAININGTASKREQUEST']._serialized_start=726
-  _globals['_TRAININGTASKREQUEST']._serialized_end=771
-  _globals['_TRAININGTASKREPLY']._serialized_start=773
-  _globals['_TRAININGTASKREPLY']._serialized_end=852
-  _globals['_SUBMITRESULTREPLY']._serialized_start=854
-  _globals['_SUBMITRESULTREPLY']._serialized_end=908
-  _globals['_LISTPARTICIPANTSREQUEST']._serialized_start=910
-  _globals['_LISTPARTICIPANTSREQUEST']._serialized_end=935
-  _globals['_LISTPARTICIPANTSREPLY']._serialized_start=937
-  _globals['_LISTPARTICIPANTSREPLY']._serialized_end=1013
-  _globals['_CREATEJOBREQUEST']._serialized_start=1015
-  _globals['_CREATEJOBREQUEST']._serialized_end=1079
-  _globals['_CREATEJOBREPLY']._serialized_start=1081
-  _globals['_CREATEJOBREPLY']._serialized_end=1113
-  _globals['_STARTTRAININGREQUEST']._serialized_start=1115
-  _globals['_STARTTRAININGREQUEST']._serialized_end=1153
-  _globals['_STARTTRAININGREPLY']._serialized_start=1155
-  _globals['_STARTTRAININGREPLY']._serialized_end=1209
-  _globals['_TRAININGSTATUSREQUEST']._serialized_start=1211
-  _globals['_TRAININGSTATUSREQUEST']._serialized_end=1250
-  _globals['_COORDINATORSERVICE']._serialized_start=1347
-  _globals['_COORDINATORSERVICE']._serialized_end=1989
+  _globals['_PARTICIPANTINFO']._serialized_end=632
+  _globals['_REGISTERPARTICIPANTREQUEST']._serialized_start=634
+  _globals['_REGISTERPARTICIPANTREQUEST']._serialized_end=704
+  _globals['_REGISTERPARTICIPANTREPLY']._serialized_start=706
+  _globals['_REGISTERPARTICIPANTREPLY']._serialized_end=760
+  _globals['_TRAININGTASKREQUEST']._serialized_start=762
+  _globals['_TRAININGTASKREQUEST']._serialized_end=825
+  _globals['_SUBMITRESULTREPLY']._serialized_start=827
+  _globals['_SUBMITRESULTREPLY']._serialized_end=881
+  _globals['_LISTPARTICIPANTSREQUEST']._serialized_start=883
+  _globals['_LISTPARTICIPANTSREQUEST']._serialized_end=908
+  _globals['_LISTPARTICIPANTSREPLY']._serialized_start=910
+  _globals['_LISTPARTICIPANTSREPLY']._serialized_end=986
+  _globals['_CREATEJOBREQUEST']._serialized_start=988
+  _globals['_CREATEJOBREQUEST']._serialized_end=1052
+  _globals['_CREATEJOBREPLY']._serialized_start=1054
+  _globals['_CREATEJOBREPLY']._serialized_end=1086
+  _globals['_STARTTRAININGREQUEST']._serialized_start=1088
+  _globals['_STARTTRAININGREQUEST']._serialized_end=1126
+  _globals['_STARTTRAININGREPLY']._serialized_start=1128
+  _globals['_STARTTRAININGREPLY']._serialized_end=1182
+  _globals['_TRAININGSTATUSREQUEST']._serialized_start=1184
+  _globals['_TRAININGSTATUSREQUEST']._serialized_end=1223
+  _globals['_COORDINATORSERVICE']._serialized_start=1320
+  _globals['_COORDINATORSERVICE']._serialized_end=1788
+  _globals['_PARTICIPANTSERVICE']._serialized_start=1790
+  _globals['_PARTICIPANTSERVICE']._serialized_end=1895
 # @@protoc_insertion_point(module_scope)
