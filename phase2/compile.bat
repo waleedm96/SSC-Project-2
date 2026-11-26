@@ -1,2 +1,0 @@
-python -m grpc_tools.protoc -I. --python_out=generatedFiles/client --pyi_out=generatedFiles/client --grpc_python_out=generatedFiles/client protos/clientservices.proto
-python -m grpc_tools.protoc -I. --python_out=generatedFiles/server --pyi_out=generatedFiles/server --grpc_python_out=generatedFiles/server protos/serverservices.proto
