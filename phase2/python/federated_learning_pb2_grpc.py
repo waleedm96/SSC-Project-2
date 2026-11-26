@@ -26,9 +26,7 @@ if _version_not_supported:
 
 
 class CoordinatorServiceStub:
-    """======================================================== service
-
-    """
+    """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
         """Constructor.
@@ -40,16 +38,6 @@ class CoordinatorServiceStub:
                 '/sscfederated.CoordinatorService/RegisterParticipant',
                 request_serializer=federated__learning__pb2.RegisterParticipantRequest.SerializeToString,
                 response_deserializer=federated__learning__pb2.RegisterParticipantReply.FromString,
-                _registered_method=True)
-        self.GetTrainingTask = channel.unary_unary(
-                '/sscfederated.CoordinatorService/GetTrainingTask',
-                request_serializer=federated__learning__pb2.TrainingTaskRequest.SerializeToString,
-                response_deserializer=federated__learning__pb2.TrainingTaskReply.FromString,
-                _registered_method=True)
-        self.SubmitTrainingResult = channel.unary_unary(
-                '/sscfederated.CoordinatorService/SubmitTrainingResult',
-                request_serializer=federated__learning__pb2.TrainingResult.SerializeToString,
-                response_deserializer=federated__learning__pb2.SubmitResultReply.FromString,
                 _registered_method=True)
         self.ListParticipants = channel.unary_unary(
                 '/sscfederated.CoordinatorService/ListParticipants',
@@ -74,25 +62,13 @@ class CoordinatorServiceStub:
 
 
 class CoordinatorServiceServicer:
-    """======================================================== service
-
-    """
+    """Missing associated documentation comment in .proto file."""
 
     def RegisterParticipant(self, request, context):
         """---- called by participants (Java)
+        rpc GetTrainingTask     (TrainingTaskRequest)        returns (TrainingTaskReply);
+        rpc SubmitTrainingResult(TrainingResult)             returns (SubmitResultReply);
         """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def GetTrainingTask(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def SubmitTrainingResult(self, request, context):
-        """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -130,16 +106,6 @@ def add_CoordinatorServiceServicer_to_server(servicer, server):
                     request_deserializer=federated__learning__pb2.RegisterParticipantRequest.FromString,
                     response_serializer=federated__learning__pb2.RegisterParticipantReply.SerializeToString,
             ),
-            'GetTrainingTask': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetTrainingTask,
-                    request_deserializer=federated__learning__pb2.TrainingTaskRequest.FromString,
-                    response_serializer=federated__learning__pb2.TrainingTaskReply.SerializeToString,
-            ),
-            'SubmitTrainingResult': grpc.unary_unary_rpc_method_handler(
-                    servicer.SubmitTrainingResult,
-                    request_deserializer=federated__learning__pb2.TrainingResult.FromString,
-                    response_serializer=federated__learning__pb2.SubmitResultReply.SerializeToString,
-            ),
             'ListParticipants': grpc.unary_unary_rpc_method_handler(
                     servicer.ListParticipants,
                     request_deserializer=federated__learning__pb2.ListParticipantsRequest.FromString,
@@ -169,9 +135,7 @@ def add_CoordinatorServiceServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class CoordinatorService:
-    """======================================================== service
-
-    """
+    """Missing associated documentation comment in .proto file."""
 
     @staticmethod
     def RegisterParticipant(request,
@@ -190,60 +154,6 @@ class CoordinatorService:
             '/sscfederated.CoordinatorService/RegisterParticipant',
             federated__learning__pb2.RegisterParticipantRequest.SerializeToString,
             federated__learning__pb2.RegisterParticipantReply.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def GetTrainingTask(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/sscfederated.CoordinatorService/GetTrainingTask',
-            federated__learning__pb2.TrainingTaskRequest.SerializeToString,
-            federated__learning__pb2.TrainingTaskReply.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def SubmitTrainingResult(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/sscfederated.CoordinatorService/SubmitTrainingResult',
-            federated__learning__pb2.TrainingResult.SerializeToString,
-            federated__learning__pb2.SubmitResultReply.FromString,
             options,
             channel_credentials,
             insecure,
@@ -352,6 +262,79 @@ class CoordinatorService:
             '/sscfederated.CoordinatorService/GetTrainingStatus',
             federated__learning__pb2.TrainingStatusRequest.SerializeToString,
             federated__learning__pb2.TrainingJob.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+
+class ParticipantServiceStub:
+    """Missing associated documentation comment in .proto file."""
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.SendTrainingTask = channel.unary_unary(
+                '/sscfederated.ParticipantService/SendTrainingTask',
+                request_serializer=federated__learning__pb2.TrainingTaskRequest.SerializeToString,
+                response_deserializer=federated__learning__pb2.TrainingResult.FromString,
+                _registered_method=True)
+
+
+class ParticipantServiceServicer:
+    """Missing associated documentation comment in .proto file."""
+
+    def SendTrainingTask(self, request, context):
+        """---- called by the server 
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_ParticipantServiceServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'SendTrainingTask': grpc.unary_unary_rpc_method_handler(
+                    servicer.SendTrainingTask,
+                    request_deserializer=federated__learning__pb2.TrainingTaskRequest.FromString,
+                    response_serializer=federated__learning__pb2.TrainingResult.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'sscfederated.ParticipantService', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('sscfederated.ParticipantService', rpc_method_handlers)
+
+
+ # This class is part of an EXPERIMENTAL API.
+class ParticipantService:
+    """Missing associated documentation comment in .proto file."""
+
+    @staticmethod
+    def SendTrainingTask(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/sscfederated.ParticipantService/SendTrainingTask',
+            federated__learning__pb2.TrainingTaskRequest.SerializeToString,
+            federated__learning__pb2.TrainingResult.FromString,
             options,
             channel_credentials,
             insecure,

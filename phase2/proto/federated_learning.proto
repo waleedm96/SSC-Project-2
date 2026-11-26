@@ -10,8 +10,8 @@ service CoordinatorService {
 
   // ---- called by participants (Java)
   rpc RegisterParticipant (RegisterParticipantRequest) returns (RegisterParticipantReply);
-  rpc GetTrainingTask     (TrainingTaskRequest)        returns (TrainingTaskReply);
-  rpc SubmitTrainingResult(TrainingResult)             returns (SubmitResultReply);
+  // rpc GetTrainingTask     (TrainingTaskRequest)        returns (TrainingTaskReply);
+  // rpc SubmitTrainingResult(TrainingResult)             returns (SubmitResultReply);
 
   // ---- called by the management client (Python)
   rpc ListParticipants    (ListParticipantsRequest)    returns (ListParticipantsReply);
@@ -19,6 +19,12 @@ service CoordinatorService {
   rpc StartTraining       (StartTrainingRequest)       returns (StartTrainingReply);
   rpc GetTrainingStatus   (TrainingStatusRequest)      returns (TrainingJob);
 }
+
+service ParticipantService {
+  // ---- called by the server 
+  rpc SendTrainingTask     (TrainingTaskRequest)        returns (TrainingResult);
+}
+
 
 enum JobStatus {
   JOB_STATUS_UNSPECIFIED = 0; 
@@ -59,26 +65,30 @@ message TrainingJob {
 }
 
 message ParticipantInfo {
-  string participant_id = 1;
-  string name           = 2;
+  string participant_ip_adr = 1;
+  string name               = 2;
 }
 
 // RegisterParticipant
 message RegisterParticipantRequest {
-  string name = 1;         
+  string participant_ip_idr = 1;
+  string name               = 2;         
 }
 message RegisterParticipantReply {
-  string participant_id = 1;
+  string participant_ip_idr = 1;
 }
 
 // GetTrainingTask (polling)
 message TrainingTaskRequest {
-  string participant_id = 1;
+  // string participant_id = 1;
+  //bool         has_task = 1;   
+  TrainingTask task     = 1;
+
 }
-message TrainingTaskReply {
-  bool         has_task = 1;   
-  TrainingTask task     = 2;
-}
+// message TrainingTaskReply {
+//   bool         has_task = 1;   
+//   TrainingTask task     = 2;
+// }
 
 // SubmitTrainingResult
 message SubmitResultReply {

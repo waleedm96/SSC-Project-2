@@ -29,7 +29,7 @@ class CoordinatorServicer(pb_grpc.CoordinatorServiceServicer):
 
     def __init__(self):
         self._lock = threading.Lock()                 # one request at a time may change the data
-        self._participants: dict[str, str] = {}       # "p1" -> "Participant A"
+        self._participants: dict[str, str] = {}       # "192.88.168.12" -> "Participant A"
         self._jobs: dict[str, pb.TrainingJob] = {}    # "job-1" -> TrainingJob message
         self._round_results: dict[str, dict] = {}     # "job-1" -> {"p1": TrainingResult, ...} for the current round
         self._aggregator = Aggregator()
@@ -37,62 +37,64 @@ class CoordinatorServicer(pb_grpc.CoordinatorServiceServicer):
   #participants funcations 
 
     def RegisterParticipant(self, request, context):
+        ip_adress = request.participant_ip_idr.strip()
         name = request.name.strip()
+        if not ip_adress:
+            context.abort(grpc.StatusCode.INVALID_ARGUMENT, "Participant ip address is empty")
         if not name:
             context.abort(grpc.StatusCode.INVALID_ARGUMENT, "Participant name is empty")
 
         with self._lock:
-            participant_id = f"p{len(self._participants) + 1}"
-            self._participants[participant_id] = name
+            self._participants[ip_adress] = name
 
-        log(f"RegisterParticipant: '{name}' registered as {participant_id}")
-        return pb.RegisterParticipantReply(participant_id=participant_id)
+        log(f"RegisterParticipant: '{name}' registered at {ip_adress}")
+        return pb.RegisterParticipantReply(participant_ip_idr=ip_adress)
 
-    def GetTrainingTask(self, request, context):
-        participant_id = request.participant_id
-        with self._lock:
-            if participant_id not in self._participants:
-                context.abort(grpc.StatusCode.NOT_FOUND, f"Unknown participant: {participant_id}")
+    # def GetTrainingTask(self, request, context):
+    #     participant_id = request.participant_id
+    #     with self._lock:
+    #         if participant_id not in self._participants:
+    #             context.abort(grpc.StatusCode.NOT_FOUND, f"Unknown participant: {participant_id}")
 
-            for job in self._jobs.values():
-                waiting_for_me = (job.status == pb.RUNNING
-                                  and participant_id in job.participant_ids
-                                  and participant_id not in self._round_results[job.job_id])
-                if waiting_for_me:
-                    task = pb.TrainingTask(job_id=job.job_id, round=job.current_round,
-                                           global_weight=job.global_weight, config=job.config)
-                    log(f"GetTrainingTask: sending {job.job_id} round {job.current_round} "
-                        f"to {participant_id} (global weight = {job.global_weight})")
-                    return pb.TrainingTaskReply(has_task=True, task=task)
+    #         for job in self._jobs.values():
+    #             waiting_for_me = (job.status == pb.RUNNING
+    #                               and participant_id in job.participant_ids
+    #                               and participant_id not in self._round_results[job.job_id])
+    #             if waiting_for_me:
+    #                 task = pb.TrainingTask(job_id=job.job_id, round=job.current_round,
+    #                                        global_weight=job.global_weight, config=job.config)
+    #                 log(f"GetTrainingTask: sending {job.job_id} round {job.current_round} "
+    #                     f"to {participant_id} (global weight = {job.global_weight})")
+    #                 return pb.TrainingTaskReply(has_task=True, task=task)
 
-        return pb.TrainingTaskReply(has_task=False)
+    #     return pb.TrainingTaskReply(has_task=False)
 
-    def SubmitTrainingResult(self, request, context):
-        with self._lock:
-            job = self._get_job(request.job_id, context)
+    # def SubmitTrainingResult(self, request, context):
+    #     with self._lock:
+    #         job = self._get_job(request.job_id, context)
 
-            if job.status != pb.RUNNING:
-                return pb.SubmitResultReply(accepted=False, message=f"{job.job_id} is not running")
-            if request.participant_id not in job.participant_ids:
-                return pb.SubmitResultReply(accepted=False, message="Participant is not part of this job")
-            if request.round != job.current_round:
-                return pb.SubmitResultReply(accepted=False, message=f"Wrong round (current is {job.current_round})")
-            if request.num_samples <= 0:
-                return pb.SubmitResultReply(accepted=False, message="num_samples must be positive")
+    #         if job.status != pb.RUNNING:
+    #             return pb.SubmitResultReply(accepted=False, message=f"{job.job_id} is not running")
+    #         if request.participant_id not in job.participant_ids:
+    #             return pb.SubmitResultReply(accepted=False, message="Participant is not part of this job")
+    #         if request.round != job.current_round:
+    #             return pb.SubmitResultReply(accepted=False, message=f"Wrong round (current is {job.current_round})")
+    #         if request.num_samples <= 0:
+    #             return pb.SubmitResultReply(accepted=False, message="num_samples must be positive")
 
-            received = self._round_results[job.job_id]
-            if request.participant_id in received:
-                return pb.SubmitResultReply(accepted=False, message="Result already submitted for this round")
+    #         received = self._round_results[job.job_id]
+    #         if request.participant_id in received:
+    #             return pb.SubmitResultReply(accepted=False, message="Result already submitted for this round")
 
-            received[request.participant_id] = request
-            job.results.add().CopyFrom(request)
-            log(f"SubmitTrainingResult: {request.participant_id} -> local weight = {request.local_weight} "
-                f"({len(received)}/{len(job.participant_ids)} results for round {job.current_round})")
+    #         received[request.participant_id] = request
+    #         job.results.add().CopyFrom(request)
+    #         log(f"SubmitTrainingResult: {request.participant_id} -> local weight = {request.local_weight} "
+    #             f"({len(received)}/{len(job.participant_ids)} results for round {job.current_round})")
 
-            if len(received) == len(job.participant_ids):
-                self._finish_round(job)
+    #         if len(received) == len(job.participant_ids):
+    #             self._finish_round(job)
 
-        return pb.SubmitResultReply(accepted=True, message="Result accepted")
+    #     return pb.SubmitResultReply(accepted=True, message="Result accepted")
 
 #client part
 
@@ -137,7 +139,11 @@ class CoordinatorServicer(pb_grpc.CoordinatorServiceServicer):
             job.current_round = 1
             self._round_results[job.job_id] = {}
 
-        log(f"StartTraining: {job.job_id} is RUNNING, round 1 - waiting for participants")
+        log(f"StartTraining: {job.job_id} is RUNNING, round 1")
+
+        for client in participant_ :
+        pb_grpc.ParticipantServiceStub(channel)
+
         return pb.StartTrainingReply(started=True, message=f"{job.job_id} started")
 
     def GetTrainingStatus(self, request, context):
