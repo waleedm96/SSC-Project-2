@@ -32,18 +32,19 @@ class ParticipantServicer(fl_pb2_grpc.ParticipantServiceServicer) :
     def SendTrainingTask(self, request, context) :        
 
         task = request.task
-        print("Task received : ", task)
+        print("____Task received____ : \n", task)
 
         new_weight = uniform(a=-20., b=20.)
 
-        print("Computed weight : ", new_weight)
+        print("____Computed weight____ : ", new_weight)
+        print("______________________________________")
         
         return fl_pb2.TrainingResult(
             job_id=task.job_id,
             participant_id=ADDRESS,
             round=task.round,
-            local_weight=new_weight
-            #num_samples=1
+            local_weight=new_weight,
+            num_samples=1
         )
 
 def register(server_address : str = SERVER_ADDRESS) : 
