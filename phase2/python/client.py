@@ -1,5 +1,5 @@
-import generatedFiles.client.protos.clientservices_pb2
-import generatedFiles.client.protos.clientservices_pb2_grpc
+import federated_learning_pb2 as fl_pb2
+import federated_learning_pb2_grpc as fl_pb2_grpc
 import grpc
 import logging
 
@@ -9,9 +9,9 @@ def run():
     # used in circumstances in which the with statement does not fit the needs
     # of the code.
     with grpc.insecure_channel("localhost:50051") as channel:
-        stub = serverservices_pb2_grpc.TrainingServiceStub(channel)
+        stub = fl_pb2_grpc.CoordinatorServiceStub(channel)
         print("-------------- GetFeature --------------")
-        startTraining(stub)
+        (stub)
 
 
 if __name__ == "__main__":

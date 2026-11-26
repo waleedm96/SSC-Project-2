@@ -6,3 +6,5 @@ __pycache__/
 docs/
 phase1/diagrams/
 ﻿__pycache__
+
+phase2/python/__pycache__
