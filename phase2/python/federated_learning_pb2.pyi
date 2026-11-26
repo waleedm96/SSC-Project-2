@@ -73,26 +73,26 @@ class TrainingJob(_message.Message):
     def __init__(self, job_id: _Optional[str] = ..., config: _Optional[_Union[TrainingConfig, _Mapping]] = ..., participant_ids: _Optional[_Iterable[str]] = ..., status: _Optional[_Union[JobStatus, str]] = ..., current_round: _Optional[int] = ..., global_weight: _Optional[float] = ..., results: _Optional[_Iterable[_Union[TrainingResult, _Mapping]]] = ...) -> None: ...
 
 class ParticipantInfo(_message.Message):
-    __slots__ = ("participant_ip_adr", "name")
-    PARTICIPANT_IP_ADR_FIELD_NUMBER: _ClassVar[int]
+    __slots__ = ("participant_ip_addr", "name")
+    PARTICIPANT_IP_ADDR_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
-    participant_ip_adr: str
+    participant_ip_addr: str
     name: str
-    def __init__(self, participant_ip_adr: _Optional[str] = ..., name: _Optional[str] = ...) -> None: ...
+    def __init__(self, participant_ip_addr: _Optional[str] = ..., name: _Optional[str] = ...) -> None: ...
 
 class RegisterParticipantRequest(_message.Message):
-    __slots__ = ("participant_ip_idr", "name")
-    PARTICIPANT_IP_IDR_FIELD_NUMBER: _ClassVar[int]
+    __slots__ = ("participant_ip_addr", "name")
+    PARTICIPANT_IP_ADDR_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
-    participant_ip_idr: str
+    participant_ip_addr: str
     name: str
-    def __init__(self, participant_ip_idr: _Optional[str] = ..., name: _Optional[str] = ...) -> None: ...
+    def __init__(self, participant_ip_addr: _Optional[str] = ..., name: _Optional[str] = ...) -> None: ...
 
 class RegisterParticipantReply(_message.Message):
-    __slots__ = ("participant_ip_idr",)
-    PARTICIPANT_IP_IDR_FIELD_NUMBER: _ClassVar[int]
-    participant_ip_idr: str
-    def __init__(self, participant_ip_idr: _Optional[str] = ...) -> None: ...
+    __slots__ = ("participant_ip_addr",)
+    PARTICIPANT_IP_ADDR_FIELD_NUMBER: _ClassVar[int]
+    participant_ip_addr: str
+    def __init__(self, participant_ip_addr: _Optional[str] = ...) -> None: ...
 
 class TrainingTaskRequest(_message.Message):
     __slots__ = ("task",)
