@@ -1,0 +1,115 @@
+syntax = "proto3";
+
+package sscfederated;
+
+option java_package = "com.ssc.federated";
+option java_multiple_files = true;
+
+
+service CoordinatorService {
+
+  // ---- called by participants (Java)
+  rpc RegisterParticipant (RegisterParticipantRequest) returns (RegisterParticipantReply);
+  rpc GetTrainingTask     (TrainingTaskRequest)        returns (TrainingTaskReply);
+  rpc SubmitTrainingResult(TrainingResult)             returns (SubmitResultReply);
+
+  // ---- called by the management client (Python)
+  rpc ListParticipants    (ListParticipantsRequest)    returns (ListParticipantsReply);
+  rpc CreateJob           (CreateJobRequest)           returns (CreateJobReply);
+  rpc StartTraining       (StartTrainingRequest)       returns (StartTrainingReply);
+  rpc GetTrainingStatus   (TrainingStatusRequest)      returns (TrainingJob);
+}
+
+enum JobStatus {
+  JOB_STATUS_UNSPECIFIED = 0; 
+  CREATED   = 1;
+  RUNNING   = 2;
+  COMPLETED = 3;
+  FAILED    = 4;
+}
+
+message TrainingConfig {
+  int32  num_rounds     = 1;
+  double initial_weight = 2;
+}
+
+message TrainingTask {
+  string         job_id        = 1;
+  int32          round         = 2;
+  double         global_weight = 3;
+  TrainingConfig config        = 4;
+}
+
+message TrainingResult {
+  string job_id         = 1;
+  string participant_id = 2;
+  int32  round          = 3;
+  double local_weight   = 4;
+  int32  num_samples    = 5;
+}
+
+message TrainingJob {
+  string                  job_id          = 1;
+  TrainingConfig          config          = 2;
+  repeated string         participant_ids = 3;
+  JobStatus               status          = 4;
+  int32                   current_round   = 5;
+  double                  global_weight   = 6;
+  repeated TrainingResult results         = 7;
+}
+
+message ParticipantInfo {
+  string participant_id = 1;
+  string name           = 2;
+}
+
+// RegisterParticipant
+message RegisterParticipantRequest {
+  string name = 1;         
+}
+message RegisterParticipantReply {
+  string participant_id = 1;
+}
+
+// GetTrainingTask (polling)
+message TrainingTaskRequest {
+  string participant_id = 1;
+}
+message TrainingTaskReply {
+  bool         has_task = 1;   
+  TrainingTask task     = 2;
+}
+
+// SubmitTrainingResult
+message SubmitResultReply {
+  bool   accepted = 1;
+  string message  = 2;
+}
+
+// ListParticipants
+message ListParticipantsRequest {}
+message ListParticipantsReply {
+  repeated ParticipantInfo participants = 1;
+}
+
+// CreateJob
+message CreateJobRequest {
+  TrainingConfig config = 1;
+}
+message CreateJobReply {
+  string job_id = 1;
+}
+
+// StartTraining
+message StartTrainingRequest {
+  string job_id = 1;
+}
+message StartTrainingReply {
+  bool   started = 1;
+  string message = 2;
+}
+
+// GetTrainingStatus
+message TrainingStatusRequest {
+  string job_id = 1;
+}

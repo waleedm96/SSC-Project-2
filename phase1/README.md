@@ -3,10 +3,6 @@
 In this phase we design a federated learning application that runs as **one single Python program**.
 In Phase 2 we split it into separate gRPC services.
 
-Diagrams (open in draw.io):
-
-- `diagrams/phase1_monolithic_architecture.drawio`
-- `diagrams/phase1_class_diagram.drawio`
 
 ## 1. What the application does
 
