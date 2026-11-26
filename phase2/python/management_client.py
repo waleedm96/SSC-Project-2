@@ -96,7 +96,7 @@ def main() -> None:
                     else:
                         print(f"\nRegistered participants ({len(participants)}):")
                         for p in participants:
-                            print(f"  - {p.participant_id}: {p.name}")
+                            print(f"  - {p.participant_ip_addr}: {p.name}")
 
                 elif choice == "2":
                     try:

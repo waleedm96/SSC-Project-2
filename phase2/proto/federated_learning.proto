@@ -65,17 +65,17 @@ message TrainingJob {
 }
 
 message ParticipantInfo {
-  string participant_ip_adr = 1;
+  string participant_ip_addr = 1;
   string name               = 2;
 }
 
 // RegisterParticipant
 message RegisterParticipantRequest {
-  string participant_ip_idr = 1;
+  string participant_ip_addr = 1;
   string name               = 2;         
 }
 message RegisterParticipantReply {
-  string participant_ip_idr = 1;
+  string participant_ip_addr = 1;
 }
 
 // GetTrainingTask (polling)

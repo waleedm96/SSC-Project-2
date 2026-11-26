@@ -37,18 +37,18 @@ class CoordinatorServicer(pb_grpc.CoordinatorServiceServicer):
   #participants funcations 
 
     def RegisterParticipant(self, request, context):
-        ip_adress = request.participant_ip_idr.strip()
+        ip_address = request.participant_ip_addr.strip()
         name = request.name.strip()
-        if not ip_adress:
+        if not ip_address:
             context.abort(grpc.StatusCode.INVALID_ARGUMENT, "Participant ip address is empty")
         if not name:
             context.abort(grpc.StatusCode.INVALID_ARGUMENT, "Participant name is empty")
 
         with self._lock:
-            self._participants[ip_adress] = name
+            self._participants[ip_address] = name
 
-        log(f"RegisterParticipant: '{name}' registered at {ip_adress}")
-        return pb.RegisterParticipantReply(participant_ip_idr=ip_adress)
+        log(f"RegisterParticipant: '{name}' registered at {ip_address}")
+        return pb.RegisterParticipantReply(participant_ip_addr=ip_address)
 
     # def GetTrainingTask(self, request, context):
     #     participant_id = request.participant_id
@@ -100,8 +100,8 @@ class CoordinatorServicer(pb_grpc.CoordinatorServiceServicer):
 
     def ListParticipants(self, request, context):
         with self._lock:
-            participants = [pb.ParticipantInfo(participant_id=pid, name=name)
-                            for pid, name in self._participants.items()]
+            participants = [pb.ParticipantInfo(participant_ip_addr=ip, name=name)
+                            for ip, name in self._participants.items()]
         return pb.ListParticipantsReply(participants=participants)
 
     def CreateJob(self, request, context):
@@ -129,22 +129,54 @@ class CoordinatorServicer(pb_grpc.CoordinatorServiceServicer):
         return pb.CreateJobReply(job_id=job_id)
 
     def StartTraining(self, request, context):
-        with self._lock:
-            job = self._get_job(request.job_id, context)
-            if job.status != pb.CREATED:
-                context.abort(grpc.StatusCode.FAILED_PRECONDITION,
-                              f"{job.job_id} cannot be started (status is {pb.JobStatus.Name(job.status)})")
+        #with self._lock:
+        job = self._get_job(request.job_id, context)
+        if job.status != pb.CREATED:
+            context.abort(grpc.StatusCode.FAILED_PRECONDITION,
+                            f"{job.job_id} cannot be started (status is {pb.JobStatus.Name(job.status)})")
 
-            job.status = pb.RUNNING
-            job.current_round = 1
-            self._round_results[job.job_id] = {}
+        job.status = pb.RUNNING
+        job.current_round = 1
+        self._round_results[job.job_id] = {}
 
         log(f"StartTraining: {job.job_id} is RUNNING, round 1")
+        
+        for r in range(job.config.num_rounds) : 
+            print("-------- Round : ", r )
 
-        for client in participant_ :
-        pb_grpc.ParticipantServiceStub(channel)
+            received = {}
 
-        return pb.StartTrainingReply(started=True, message=f"{job.job_id} started")
+            #Send tasks to participants
+            for client in self._participants.keys() :
+                print("__Client : ", client)
+                try : 
+                    with grpc.insecure_channel(client) as channel: 
+                        print(job)
+
+                        stub = pb_grpc.ParticipantServiceStub(channel)
+                        
+                        task = pb.TrainingTask(job_id=job.job_id, round=job.current_round,
+                            global_weight=job.global_weight, config=job.config)
+                        request = pb.TrainingTaskRequest(task=task)
+
+                        results = stub.SendTrainingTask(request)
+                        received[results.participant_id] = results
+
+                        log(f"SubmitTrainingResult: {results.participant_id} -> local weight = {results.local_weight} "
+                        f"({len(received)}/{len(job.participant_ids)} results for round {job.current_round})")
+                except grpc._channel._InactiveRpcError as e : 
+                    #print("HERE's the exception : ", type(e), e)
+                    log(f"Client {client} is unreachable")
+                except Exception as e : 
+                    print(f"ERROR {type(e)} : {e}")
+
+            print("HERE")
+            #We update the round results
+            self._round_results[job.job_id] = received
+            self._finish_round(job=job)
+
+        log(f"{job.job_id} is finished, final results are : {job.global_weight}")
+        return pb.StartTrainingReply(started=True, message=f"{job.job_id} finished")
 
     def GetTrainingStatus(self, request, context):
         with self._lock:
@@ -160,11 +192,14 @@ class CoordinatorServicer(pb_grpc.CoordinatorServiceServicer):
         return self._jobs[job_id]
 
     def _finish_round(self, job: pb.TrainingJob) -> None:
+        log("bullshit")
         results = list(self._round_results[job.job_id].values())
         job.global_weight = self._aggregator.aggregate(results)
 
+        log("yep")
         values = " + ".join(str(r.local_weight) for r in results)
         log(f"Aggregation: ({values}) / {len(results)} -> global weight = {job.global_weight}")
+        log("yep2")
 
         if job.current_round < job.config.num_rounds:
             job.current_round += 1
