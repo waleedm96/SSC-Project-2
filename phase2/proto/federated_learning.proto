@@ -5,29 +5,33 @@ package sscfederated;
 option java_package = "com.ssc.federated";
 option java_multiple_files = true;
 
+// Push model: every participant runs its own small gRPC server (ParticipantService).
+// It registers its address with the coordinator, and the coordinator sends it the
+// training tasks of each round.
 
+
+// Runs in the coordinator (Python).
 service CoordinatorService {
 
-  // ---- called by participants (Java)
+  // ---- called by participants (Node.js, Python, Java)
   rpc RegisterParticipant (RegisterParticipantRequest) returns (RegisterParticipantReply);
-  // rpc GetTrainingTask     (TrainingTaskRequest)        returns (TrainingTaskReply);
-  // rpc SubmitTrainingResult(TrainingResult)             returns (SubmitResultReply);
 
-  // ---- called by the management client (Python)
+  // ---- called by the management client (Python CLI)
   rpc ListParticipants    (ListParticipantsRequest)    returns (ListParticipantsReply);
   rpc CreateJob           (CreateJobRequest)           returns (CreateJobReply);
   rpc StartTraining       (StartTrainingRequest)       returns (StartTrainingReply);
   rpc GetTrainingStatus   (TrainingStatusRequest)      returns (TrainingJob);
 }
 
+// Runs in every participant.
 service ParticipantService {
-  // ---- called by the server 
-  rpc SendTrainingTask     (TrainingTaskRequest)        returns (TrainingResult);
+  // ---- called by the coordinator: train one round on the local data and return the result
+  rpc SendTrainingTask    (TrainingTaskRequest)        returns (TrainingResult);
 }
 
 
 enum JobStatus {
-  JOB_STATUS_UNSPECIFIED = 0; 
+  JOB_STATUS_UNSPECIFIED = 0;
   CREATED   = 1;
   RUNNING   = 2;
   COMPLETED = 3;
@@ -48,7 +52,7 @@ message TrainingTask {
 
 message TrainingResult {
   string job_id         = 1;
-  string participant_id = 2;
+  string participant_id = 2;   // the participant's address (participant_ip_addr)
   int32  round          = 3;
   double local_weight   = 4;
   int32  num_samples    = 5;
@@ -57,7 +61,7 @@ message TrainingResult {
 message TrainingJob {
   string                  job_id          = 1;
   TrainingConfig          config          = 2;
-  repeated string         participant_ids = 3;
+  repeated string         participant_ids = 3;   // participant addresses
   JobStatus               status          = 4;
   int32                   current_round   = 5;
   double                  global_weight   = 6;
@@ -65,35 +69,22 @@ message TrainingJob {
 }
 
 message ParticipantInfo {
-  string participant_ip_addr = 1;
-  string name               = 2;
+  string participant_ip_addr = 1;   // host:port of the participant's ParticipantService
+  string name                = 2;
 }
 
 // RegisterParticipant
 message RegisterParticipantRequest {
-  string participant_ip_addr = 1;
-  string name               = 2;         
+  string participant_ip_addr = 1;   // where the coordinator can reach this participant
+  string name                = 2;
 }
 message RegisterParticipantReply {
   string participant_ip_addr = 1;
 }
 
-// GetTrainingTask (polling)
+// SendTrainingTask
 message TrainingTaskRequest {
-  // string participant_id = 1;
-  //bool         has_task = 1;   
-  TrainingTask task     = 1;
-
-}
-// message TrainingTaskReply {
-//   bool         has_task = 1;   
-//   TrainingTask task     = 2;
-// }
-
-// SubmitTrainingResult
-message SubmitResultReply {
-  bool   accepted = 1;
-  string message  = 2;
+  TrainingTask task = 1;
 }
 
 // ListParticipants

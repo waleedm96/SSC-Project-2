@@ -1,10 +1,8 @@
 __pycache__/
 *.pyc
 .venv/
+node_modules/
 
 # local only, not pushed
 docs/
 phase1/diagrams/
-﻿__pycache__
-
-phase2/python/__pycache__

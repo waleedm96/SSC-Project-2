@@ -1,0 +1,23 @@
+{
+  "name": "fl-participant",
+  "version": "1.0.0",
+  "description": "Federated learning Participant A (Node.js) - talks to the Python Coordinator Service over gRPC",
+  "main": "src/index.js",
+  "bin": {
+    "fl-participant": "src/index.js"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "quick": "node src/index.js --name \"Participant A\" --data-file data/participant-a.json",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18.11"
+  },
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@grpc/grpc-js": "^1.14.7",
+    "@grpc/proto-loader": "^0.8.1"
+  }
+}

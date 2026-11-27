@@ -100,14 +100,6 @@ class TrainingTaskRequest(_message.Message):
     task: TrainingTask
     def __init__(self, task: _Optional[_Union[TrainingTask, _Mapping]] = ...) -> None: ...
 
-class SubmitResultReply(_message.Message):
-    __slots__ = ("accepted", "message")
-    ACCEPTED_FIELD_NUMBER: _ClassVar[int]
-    MESSAGE_FIELD_NUMBER: _ClassVar[int]
-    accepted: bool
-    message: str
-    def __init__(self, accepted: _Optional[bool] = ..., message: _Optional[str] = ...) -> None: ...
-
 class ListParticipantsRequest(_message.Message):
     __slots__ = ()
     def __init__(self) -> None: ...

@@ -26,7 +26,12 @@ if _version_not_supported:
 
 
 class CoordinatorServiceStub:
-    """Missing associated documentation comment in .proto file."""
+    """Push model: every participant runs its own small gRPC server (ParticipantService).
+    It registers its address with the coordinator, and the coordinator sends it the
+    training tasks of each round.
+
+    Runs in the coordinator (Python).
+    """
 
     def __init__(self, channel):
         """Constructor.
@@ -62,19 +67,22 @@ class CoordinatorServiceStub:
 
 
 class CoordinatorServiceServicer:
-    """Missing associated documentation comment in .proto file."""
+    """Push model: every participant runs its own small gRPC server (ParticipantService).
+    It registers its address with the coordinator, and the coordinator sends it the
+    training tasks of each round.
+
+    Runs in the coordinator (Python).
+    """
 
     def RegisterParticipant(self, request, context):
-        """---- called by participants (Java)
-        rpc GetTrainingTask     (TrainingTaskRequest)        returns (TrainingTaskReply);
-        rpc SubmitTrainingResult(TrainingResult)             returns (SubmitResultReply);
+        """---- called by participants (Node.js, Python, Java)
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def ListParticipants(self, request, context):
-        """---- called by the management client (Python)
+        """---- called by the management client (Python CLI)
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -135,7 +143,12 @@ def add_CoordinatorServiceServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class CoordinatorService:
-    """Missing associated documentation comment in .proto file."""
+    """Push model: every participant runs its own small gRPC server (ParticipantService).
+    It registers its address with the coordinator, and the coordinator sends it the
+    training tasks of each round.
+
+    Runs in the coordinator (Python).
+    """
 
     @staticmethod
     def RegisterParticipant(request,
@@ -274,7 +287,8 @@ class CoordinatorService:
 
 
 class ParticipantServiceStub:
-    """Missing associated documentation comment in .proto file."""
+    """Runs in every participant.
+    """
 
     def __init__(self, channel):
         """Constructor.
@@ -290,10 +304,11 @@ class ParticipantServiceStub:
 
 
 class ParticipantServiceServicer:
-    """Missing associated documentation comment in .proto file."""
+    """Runs in every participant.
+    """
 
     def SendTrainingTask(self, request, context):
-        """---- called by the server 
+        """---- called by the coordinator: train one round on the local data and return the result
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -316,7 +331,8 @@ def add_ParticipantServiceServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class ParticipantService:
-    """Missing associated documentation comment in .proto file."""
+    """Runs in every participant.
+    """
 
     @staticmethod
     def SendTrainingTask(request,
